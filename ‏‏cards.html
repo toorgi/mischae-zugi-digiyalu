@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>קלפי שיח זוגי – 40 קלפים</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0b1220;
@@ -44,8 +45,7 @@ header{padding:18px 20px; display:flex; align-items:center; gap:12px; justify-co
 .main{padding:22px}
 .panel{display:grid; gap:18px}
 .card{position:relative; min-height:220px; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:26px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;}
-.card h2{margin:0; font-size:28px; line-height:1.4; font-weight:800}
-.card textarea{margin-top:12px; width:90%; height:60px; border-radius:12px; border:1px solid rgba(255,255,255,0.2); padding:6px; background:rgba(255,255,255,0.05); color:var(--ink); resize:none;}
+.card h2{margin:0; font-size:32px; font-weight:700; font-family: 'Caveat', cursive; line-height:1.3; text-align:center;}
 .card .badge{position:absolute; top:14px; inset-inline-start:14px; font-size:12px; color:var(--bg); background:var(--warn); padding:4px 8px; border-radius:999px; font-weight:800}
 .card .idx{position:absolute; top:14px; inset-inline-end:14px; font-size:12px; color:var(--muted);}
 .toolbar{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
@@ -68,7 +68,7 @@ header{padding:18px 20px; display:flex; align-items:center; gap:12px; justify-co
 <div class="logo" aria-hidden="true"></div>
 <div>
 <div class="title">קלפי שיח זוגי</div>
-<div class="muted small">40 קלפים · ללא אינטרנט · גרסת מחשב</div>
+<div class="muted small">40 קלפים · גרסת מחשב</div>
 </div>
 </div>
 <div class="row">
@@ -100,7 +100,6 @@ header{padding:18px 20px; display:flex; align-items:center; gap:12px; justify-co
 <div class="badge" id="badge"></div>
 <div class="idx" id="idx"></div>
 <h2 id="q">הקלף יופיע כאן…</h2>
-<textarea id="answer" placeholder="כתבו כאן את תשובתכם..."></textarea>
 </div>
 <div class="toolbar">
 <button class="btn" id="btnPrev">⬅️ הקודם</button>
@@ -117,7 +116,7 @@ header{padding:18px 20px; display:flex; align-items:center; gap:12px; justify-co
 <h3 style="margin:0 0 8px 0">איך משחקים</h3>
 <ol class="muted">
 <li>שבו זה מול זו, שקט ונעים. כבו התראות.</li>
-<li>בכל תור: אחד קורא את הקלף ומשיב, השני מקשיב עד הסוף.</li>
+<li>בכל תור: אחד קורא את הקלף, השני מקשיב עד הסוף.</li>
 <li>מותר לדלג, לשתף קצר או ארוך. בלי ביקורת, רק סקרנות טובה.</li>
 <li>בחרו מצב: <strong>מעורבב</strong> לשילוב מפתיע, או <strong>מדורג</strong> – קלפים קלים → עמוקים.</li>
 </ol>
@@ -128,7 +127,7 @@ header{padding:18px 20px; display:flex; align-items:center; gap:12px; justify-co
 
 <div class="settingsPanel" id="settingsPanel">
 <label>🔊 צלילים: <input type="checkbox" id="soundToggle" checked></label>
-<label>🔠 גודל טקסט: <input type="range" id="fontSizeRange" min="16" max="36" value="28"></label>
+<label>🔠 גודל טקסט: <input type="range" id="fontSizeRange" min="16" max="36" value="32"></label>
 <label>🎨 צבע רקע: <input type="color" id="bgColor" value="#0b1220"></label>
 </div>
 
@@ -184,10 +183,11 @@ const TIPS = [
 
 const el = (id)=>document.getElementById(id);
 const screens = { start:el('screenStart'), game:el('screenGame'), how:el('screenHow') };
-const card = { badge:el('badge'), idx:el('idx'), q:el('q'), answer:el('answer') };
+const cardEl = { q:el('q') };
 const posEl = el('pos'), totalEl = el('total'), clockEl = el('clock'), tipEl = el('tip');
-let deck=[], pos=0, timer=null, seconds=0, tipIdx=0, soundOn=true, answers=[];
+let deck=[], pos=0, timer=null, seconds=0, tipIdx=0, soundOn=true;
 
+// קולות
 const flipSound=el('flipSound'), shuffleSound=el('shuffleSound'), endSound=el('endSound'), bgAudio=el('bgSound');
 
 // --- פונקציות ---
@@ -198,64 +198,30 @@ function resetAll(){ seconds=0; clockEl.textContent='00:00'; pos=0; render(); }
 function fisherYates(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
 function buildDeckMixed(){ deck=fisherYates([...CARDS]); }
 function buildDeckLeveled(){ deck=[1,2,3,4].map(l=>fisherYates(CARDS.filter(c=>c.lvl===l))).flat(); }
-function render(){
-  totalEl.textContent=deck.length; posEl.textContent=Math.min(pos+1, deck.length);
-  if(deck[pos]){ card.q.textContent=deck[pos].t; card.answer.value=answers[pos]||''; tipEl.textContent=TIPS[tipIdx]; }
-}
+function render(){ totalEl.textContent=deck.length; posEl.textContent=Math.min(pos+1, deck.length); if(deck[pos]) cardEl.q.textContent=deck[pos].t; tipEl.textContent=TIPS[tipIdx]; }
 function showTip(){ tipIdx=(tipIdx+1)%TIPS.length; tipEl.textContent=TIPS[tipIdx]; if(soundOn) flipSound.play(); }
-function saveAnswer(){ answers[pos]=card.answer.value; }
-
-// --- ניהול סשן מוגבל ---
-function checkLock(){
-  let plays=parseInt(localStorage.getItem('plays')||'0');
-  if(plays>=2){ showEndScreen(); return true; }
-  return false;
-}
-function incrementPlays(){ let plays=parseInt(localStorage.getItem('plays')||'0'); plays++; localStorage.setItem('plays',plays); }
-function showEndScreen(){
-  screens.start.style.display='none'; screens.game.style.display='none'; screens.how.style.display='none';
-  stopClock(); bgAudio.pause(); endSound.play();
-  const endDiv=document.createElement('div');
-  endDiv.style.cssText='position:fixed; inset:0; background:rgba(20,20,40,0.95); color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:24px; text-align:center; z-index:9999;';
-  endDiv.innerHTML=`<p>🔒 המשחק נגמר – לא ניתן להפעילו יותר</p><p>תודה ששיחקת את הפעמיים המותרים!</p>`;
-  document.body.appendChild(endDiv);
-}
 
 // --- אירועים ---
-el('btnStart').onclick = ()=>{
-  if(checkLock()) return;
-  incrementPlays();
-  screens.start.style.display='none'; screens.game.style.display='block';
-  buildDeckMixed(); answers=Array(deck.length).fill(''); pos=0; render(); startClock(); bgAudio.play();
-};
+el('btnStart').onclick = ()=>{ screens.start.style.display='none'; screens.game.style.display='block'; buildDeckMixed(); pos=0; render(); startClock(); bgAudio.play().catch(()=>{}); };
 el('btnPlayMixed').onclick = el('btnStart').onclick;
-el('btnPlayLeveled').onclick = ()=>{
-  if(checkLock()) return;
-  incrementPlays();
-  screens.start.style.display='none'; screens.game.style.display='block';
-  buildDeckLeveled(); answers=Array(deck.length).fill(''); pos=0; render(); startClock(); bgAudio.play();
-};
-
-el('btnHow').onclick = ()=>{ screens.start.style.display='none'; screens.how.style.display='block'; }
-el('btnBack').onclick = ()=>{ screens.how.style.display='none'; screens.start.style.display='block'; }
-el('btnNext').onclick = ()=>{
-  saveAnswer(); if(pos<deck.length-1){ pos++; render(); if(soundOn) flipSound.play(); } 
-};
-el('btnPrev').onclick = ()=>{ saveAnswer(); if(pos>0){ pos--; render(); if(soundOn) flipSound.play(); } };
-el('btnShuffle').onclick = ()=>{ deck=fisherYates(deck); render(); if(soundOn) shuffleSound.play(); }
+el('btnPlayLeveled').onclick = ()=>{ screens.start.style.display='none'; screens.game.style.display='block'; buildDeckLeveled(); pos=0; render(); startClock(); bgAudio.play().catch(()=>{}); };
+el('btnHow').onclick = ()=>{ screens.start.style.display='none'; screens.how.style.display='block'; };
+el('btnBack').onclick = ()=>{ screens.how.style.display='none'; screens.start.style.display='block'; };
+el('btnNext').onclick = ()=>{ if(pos<deck.length-1){ pos++; render(); if(soundOn) flipSound.play(); } };
+el('btnPrev').onclick = ()=>{ if(pos>0){ pos--; render(); if(soundOn) flipSound.play(); } };
+el('btnShuffle').onclick = ()=>{ deck=fisherYates(deck); render(); if(soundOn) shuffleSound.play(); };
 el('btnTip').onclick = showTip;
-el('btnCopy').onclick = ()=>{ navigator.clipboard.writeText(deck[pos]?.t||''); }
+el('btnCopy').onclick = ()=>{ navigator.clipboard.writeText(deck[pos]?.t||''); };
 el('btnReset').onclick = resetAll;
 
 // הגדרות
 el('btnSettings').onclick=()=>{ const panel=el('settingsPanel'); panel.style.display=(panel.style.display==='block')?'none':'block'; }
 el('soundToggle').onchange=e=>{ soundOn=e.target.checked; }
-el('fontSizeRange').oninput=e=>{ card.q.style.fontSize=e.target.value+'px'; }
+el('fontSizeRange').oninput=e=>{ cardEl.q.style.fontSize=e.target.value+'px'; }
 el('bgColor').oninput=e=>{ document.body.style.background=e.target.value; }
 
-// בדיקה מיידית
-checkLock();
+// --- גופן מעניין יותר ---
+cardEl.q.style.fontFamily='"Chalkboard SE", "Comic Sans MS", sans-serif';
 </script>
 </body>
 </html>
-

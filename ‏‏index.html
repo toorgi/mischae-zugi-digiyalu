@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>כניסה למשחק</title>
+<style>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #0b1220;
+  color: white;
+  margin: 0;
+}
+.login-box {
+  background: #121a2b;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  width: 200px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #6aa9ff;
+  color: #081222;
+  font-weight: bold;
+  cursor: pointer;
+}
+#error {
+  color: #ffd166;
+  margin-top: 10px;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+<div class="login-box">
+  <h2>הכנס סיסמה</h2>
+  <input type="password" id="password" placeholder="סיסמה">
+  <br>
+  <button id="loginBtn">כניסה</button>
+  <p id="error"></p>
+</div>
+
+<script>
+document.getElementById('loginBtn').addEventListener('click', function() {
+  const pwd = document.getElementById('password').value.trim();
+  const correctPassword = '2341'; // שנה כאן לסיסמה הרצויה
+  if(pwd === correctPassword){
+    // שימוש בנתיב מדויק - במידה והקובץ נמצא בתיקייה אחרת
+    window.location.href = encodeURI('‏‏cards.html'); 
+  } else {
+    document.getElementById('error').textContent = 'סיסמה שגויה!';
+  }
+});
+</script>
+</body>
+</html>
