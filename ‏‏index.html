@@ -52,21 +52,20 @@ button {
   <h2>הכנס סיסמה</h2>
   <input type="password" id="password" placeholder="סיסמה">
   <br>
-  <button id="loginBtn">כניסה</button>
+  <button onclick="checkPassword()">כניסה</button>
   <p id="error"></p>
 </div>
 
 <script>
-document.getElementById('loginBtn').addEventListener('click', function() {
-  const pwd = document.getElementById('password').value.trim();
+function checkPassword() {
+  const pwd = document.getElementById('password').value;
   const correctPassword = '2341'; // שנה כאן לסיסמה הרצויה
-  if(pwd === correctPassword){
-    // שימוש בנתיב מדויק - במידה והקובץ נמצא בתיקייה אחרת
-    window.location.href = encodeURI('‏‏cards.html'); 
+  if (pwd === correctPassword) {
+    window.location.href = 'cards.html';
   } else {
     document.getElementById('error').textContent = 'סיסמה שגויה!';
   }
-});
+}
 </script>
 </body>
 </html>
