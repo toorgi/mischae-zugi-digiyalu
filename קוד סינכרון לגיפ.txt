@@ -1,0 +1,5 @@
+git init
+git remote add origin https://github.com/toorgi/mischae-zugi-digiyalu.git
+git add .
+git commit -m "first upload"
+git push -u origin main
